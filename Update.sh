@@ -2,7 +2,7 @@
 
 # Configurações
 JSON_URL="https://raw.githubusercontent.com/TheViniAlmeida/Unix-Aliases/refs/heads/main/AliasesList.json"
-BASHRC="$HOME/.bashrc"  # Ou ~/.zshrc se você usa ZSH
+BASHRC="$HOME/.bashrc"  # Altere para ~/.zshrc se você usar ZSH
 TEMP_ALIAS_FILE="/tmp/.temp_aliases.sh"
 
 # Função para baixar o arquivo JSON de aliases
@@ -39,11 +39,19 @@ update_bashrc() {
     echo "Aliases atualizados com sucesso no $BASHRC."
 }
 
+# Função para carregar o .bashrc automaticamente
+reload_bashrc() {
+    echo "Carregando as alterações do $BASHRC..."
+    source "$BASHRC"
+    if [ $? -eq 0 ]; then
+        echo "Aliases carregados com sucesso."
+    else
+        echo "Erro ao carregar o $BASHRC. Verifique o conteúdo."
+    fi
+}
+
 # Executa as funções
 download_aliases
 generate_aliases
 update_bashrc
-
-# Carrega as alterações no .bashrc
-source "$BASHRC"
-echo "Novos aliases carregados com sucesso."
+reload_bashrc
