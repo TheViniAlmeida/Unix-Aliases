@@ -1,9 +1,23 @@
 #!/bin/bash
 
 # Configurações
-JSON_URL="https://raw.githubusercontent.com/TheViniAlmeida/Unix-Aliases/refs/heads/main/AliasesList.json"
+SCRIPT_URL="https://raw.githubusercontent.com/TheViniAlmeida/Unix-Aliases/refs/heads/main/Update.sh"
 BASHRC="$HOME/.bashrc"  # Altere para ~/.zshrc se você usar ZSH
 TEMP_ALIAS_FILE="/tmp/.temp_aliases.sh"
+JSON_URL="https://raw.githubusercontent.com/TheViniAlmeida/Unix-Aliases/refs/heads/main/AliasesList.json"
+SELF_PATH="/usr/local/bin/update-aliases"
+
+# Função para atualizar o próprio script
+update_self() {
+    echo "Atualizando o próprio script..."
+    sudo curl -s -o "$SELF_PATH" "$SCRIPT_URL" && sudo chmod +x "$SELF_PATH"
+    if [ $? -eq 0 ]; then
+        echo "Script atualizado com sucesso."
+    else
+        echo "Erro ao atualizar o script."
+        exit 1
+    fi
+}
 
 # Função para baixar o arquivo JSON de aliases
 download_aliases() {
@@ -51,6 +65,7 @@ reload_bashrc() {
 }
 
 # Executa as funções
+update_self
 download_aliases
 generate_aliases
 update_bashrc
