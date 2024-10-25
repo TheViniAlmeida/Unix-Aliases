@@ -1,0 +1,27 @@
+[
+    {
+      "alias": "gs",
+      "command": "git status",
+      "description": "Show the status of the Git repository"
+    },
+    {
+      "alias": "ll",
+      "command": "ls -la",
+      "description": "List files with detailed information"
+    },
+    {
+      "alias": "recompose",
+      "command": "docker compose down && docker compose up -d",
+      "description": "Down and Up the container"
+    },
+    {
+      "alias": "compose-u",
+      "command": "docker compose up -d",
+      "description": "Up the container via composer"
+    },
+    {
+      "alias": "compose-d",
+      "command": "docker compose down",
+      "description": "Down the container via composer"
+    }
+  ]
