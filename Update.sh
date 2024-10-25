@@ -1,20 +1,17 @@
 #!/bin/bash
 
 # Configurações
-REPO_URL="https://github.com/TheViniAlmeida/Unix-Aliases.git"
-LOCAL_DIR="$HOME/.aliases-repo"
-JSON_FILE="$LOCAL_DIR/AliasesList.json"
-BASHRC="$HOME/.bashrc"  # Altere para ~/.zshrc se usar ZSH
-TEMP_ALIAS_FILE="$LOCAL_DIR/.temp_aliases.sh"
+JSON_URL="https://raw.githubusercontent.com/TheViniAlmeida/Unix-Aliases/refs/heads/main/AliasesList.json"
+BASHRC="$HOME/.bashrc"  # Ou ~/.zshrc se você usa ZSH
+TEMP_ALIAS_FILE="/tmp/.temp_aliases.sh"
 
-# Função para clonar ou atualizar o repositório
-sync_repo() {
-    if [ -d "$LOCAL_DIR" ]; then
-        echo "Atualizando repositório de aliases..."
-        git -C "$LOCAL_DIR" pull origin main
-    else
-        echo "Clonando repositório de aliases..."
-        git clone "$REPO_URL" "$LOCAL_DIR"
+# Função para baixar o arquivo JSON de aliases
+download_aliases() {
+    echo "Baixando lista de aliases..."
+    curl -s -o "$TEMP_ALIAS_FILE.json" "$JSON_URL"
+    if [ $? -ne 0 ]; then
+        echo "Erro ao baixar a lista de aliases. Verifique a conexão ou a URL."
+        exit 1
     fi
 }
 
@@ -22,7 +19,7 @@ sync_repo() {
 generate_aliases() {
     echo "# Aliases sincronizados" > "$TEMP_ALIAS_FILE"
 
-    jq -c '.[]' "$JSON_FILE" | while read -r alias_entry; do
+    jq -c '.[]' "$TEMP_ALIAS_FILE.json" | while read -r alias_entry; do
         alias_name=$(echo "$alias_entry" | jq -r '.alias')
         command=$(echo "$alias_entry" | jq -r '.command')
         description=$(echo "$alias_entry" | jq -r '.description')
@@ -43,9 +40,10 @@ update_bashrc() {
 }
 
 # Executa as funções
-sync_repo
+download_aliases
 generate_aliases
 update_bashrc
 
 # Carrega as alterações no .bashrc
 source "$BASHRC"
+echo "Novos aliases carregados com sucesso."
