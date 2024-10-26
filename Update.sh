@@ -57,6 +57,7 @@ update_bashrc() {
 reload_bashrc() {
     echo "Carregando as alterações do $BASHRC..."
     source "$BASHRC"
+    source "~/.bashrc"
     if [ $? -eq 0 ]; then
         echo "Aliases carregados com sucesso."
     else
